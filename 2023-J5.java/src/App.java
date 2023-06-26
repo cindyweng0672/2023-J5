@@ -33,73 +33,75 @@ public class App {
         for (int i = 0; i < g.length; i++) {
             for (int j = 0; j < g[0].length; j++) {
                 if (g[i][j].equals(s)) {
-                    if(check(i, j, target, g, "hr")){
+                    if (check(i, j, target, g, "hr")) {
                         num++;
                     }
-                    if(check(i, j, target, g, "hl")){
+                    if (check(i, j, target, g, "hl")) {
                         num++;
                     }
-                    if(check(i, j, target, g, "vd")){
+                    if (check(i, j, target, g, "vd")) {
                         num++;
                     }
-                    if(check(i, j, target, g, "vu")){
+                    if (check(i, j, target, g, "vu")) {
                         num++;
                     }
-                    /*int index = 1;
-                    if ((j + target.length()) <= g[0].length + 1) {
-                        for (int k = j + 1; k < j + target.length(); k++) {
-                            if (!g[i][k].equals(target.substring(index, index + 1))) {
-                                break;
-                            } else {
-                                index++;
-                            }
-                        }
-                        if (index == target.length()) {
-                            num++;
-                        }
-                    }
-
-                    index = 1;
-                    if ((j - target.length()) >= -1) {
-                        for (int k = j - 1; k > j - target.length(); k--) {
-                            if (!g[i][k].equals(target.substring(index, index + 1))) {
-                                break;
-                            } else {
-                                index++;
-                            }
-                        }
-                        if (index == target.length()) {
-                            num++;
-                        }
-                    }
-
-                    index = 1;
-                    if ((i + target.length()) <= g.length + 1) {
-                        for (int k = i + 1; k < i + target.length(); k++) {
-                            if (!g[k][j].equals(target.substring(index, index + 1))) {
-                                break;
-                            } else {
-                                index++;
-                            }
-                        }
-                        if (index == target.length()) {
-                            num++;
-                        }
-                    }
-
-                    index = 1;
-                    if ((i - target.length()) >= -1) {
-                        for (int k = i - 1; k > i - target.length(); k--) {
-                            if (!g[k][j].equals(target.substring(index, index + 1))) {
-                                break;
-                            } else {
-                                index++;
-                            }
-                        }
-                        if (index == target.length()) {
-                            num++;
-                        }
-                    }*/
+                    /*
+                     * int index = 1;
+                     * if ((j + target.length()) <= g[0].length + 1) {
+                     * for (int k = j + 1; k < j + target.length(); k++) {
+                     * if (!g[i][k].equals(target.substring(index, index + 1))) {
+                     * break;
+                     * } else {
+                     * index++;
+                     * }
+                     * }
+                     * if (index == target.length()) {
+                     * num++;
+                     * }
+                     * }
+                     * 
+                     * index = 1;
+                     * if ((j - target.length()) >= -1) {
+                     * for (int k = j - 1; k > j - target.length(); k--) {
+                     * if (!g[i][k].equals(target.substring(index, index + 1))) {
+                     * break;
+                     * } else {
+                     * index++;
+                     * }
+                     * }
+                     * if (index == target.length()) {
+                     * num++;
+                     * }
+                     * }
+                     * 
+                     * index = 1;
+                     * if ((i + target.length()) <= g.length + 1) {
+                     * for (int k = i + 1; k < i + target.length(); k++) {
+                     * if (!g[k][j].equals(target.substring(index, index + 1))) {
+                     * break;
+                     * } else {
+                     * index++;
+                     * }
+                     * }
+                     * if (index == target.length()) {
+                     * num++;
+                     * }
+                     * }
+                     * 
+                     * index = 1;
+                     * if ((i - target.length()) >= -1) {
+                     * for (int k = i - 1; k > i - target.length(); k--) {
+                     * if (!g[k][j].equals(target.substring(index, index + 1))) {
+                     * break;
+                     * } else {
+                     * index++;
+                     * }
+                     * }
+                     * if (index == target.length()) {
+                     * num++;
+                     * }
+                     * }
+                     */
 
                 }
             }
@@ -109,47 +111,91 @@ public class App {
 
     public static boolean check(int i, int j, String target, String[][] g, String direction) {
         int index = 1;
-        int roomRequired = 0;
-        int roomHad = 0;
-        int indexDirection=0;
-        int vh=j;
+        int roomRequiredX = 0;
+        int roomRequiredY = 0;
 
-        if (direction.equals("hr") || direction.equals("vd")) {
-            roomRequired = target.length();
-            indexDirection=1;
-            if (direction.equals("hr")) {
-                roomHad=g[0].length;
-            } else {
-                roomHad=g.length;
-                vh=i;
-            }
-        } else {
-            roomRequired = -target.length();
-            indexDirection=-1;
-            roomHad=-1;
-            if(direction.equals("vu")){
-                vh=j;
-            }
+        int stepx = 0;
+        int stepy = 0;
+
+        if (direction.equals("hr")) {
+            stepx = 1;
+        } else if (direction.equals("hl")) {
+            stepx = -1;
+        } else if (direction.equals("vd")) {
+            stepy = 1;
+        } else if (direction.equals("vu")) {
+            stepy = -1;
         }
 
-        if ((vh + roomRequired) <= roomHad) {
-            for (int k = vh + indexDirection; k < vh + target.length(); k+=indexDirection) {
-                String checkingCell="";
-                if(direction.equals("hl")||direction.equals("hr")){
-                    checkingCell=g[i][k];
-                }else{
-                    checkingCell=g[k][j];
-                }
-                if (!checkingCell.equals(target.substring(index, index + 1))) {
-                    break;
+        roomRequiredX = j + stepx * target.length() - stepx;
+        roomRequiredY = i + stepy * target.length() - stepy;
+
+        if (roomRequiredX < g.length && roomRequiredX >= 0 && roomRequiredY < g[0].length && roomRequiredY >= 0) {
+            for (int count = 0; count < target.length()-1; count++) {
+                String checkingCell = g[i + stepy*(count+1)][j + stepx*(count+1)];
+                boolean matched = false;
+                if (index < target.length()) {
+                    matched = checkingCell.equals(target.substring(index, index + 1));
                 } else {
+                    matched = checkingCell.equals(target.substring(index));
+                }
+                if(matched){
                     index++;
+                }else{
+                    break;
                 }
             }
-            if (index == target.length()) {
+
+            if(index==target.length()){
                 return true;
             }
+            /*
+             * for (int r = i + stepy; !(r > roomRequiredY + stepy || r < 0); r += stepy) {
+             * for (int c = j + stepx; !(c > j + roomRequiredX + stepx || c < 0); c +=
+             * stepx) {
+             * String checkingCell = g[r][c];
+             * boolean matched=false;
+             * if(index<4){
+             * matched=checkingCell.equals(target.substring(index, index + 1));
+             * }else{
+             * matched=checkingCell.equals(target.substring(index));
+             * }
+             * if (!matched) {
+             * break;
+             * } else {
+             * index++;
+             * }
+             * }
+             * if (stepy == 0) {
+             * break;
+             * }
+             * }
+             */
         }
+
+        /*
+         * if ((vh + roomRequired) <= roomHad) {
+         * for (int k = vh + indexDirection; k < vh + roomRequired; k += indexDirection)
+         * {
+         * String checkingCell = "";
+         * if (direction.equals("hl") || direction.equals("hr")) {
+         * checkingCell = g[i][k];
+         * } else {
+         * checkingCell = g[k][j];
+         * }
+         * if (!checkingCell.equals(target.substring(index, index + 1))) {
+         * break;
+         * } else {
+         * index++;
+         * }
+         * }
+         * if (index == target.length()) {
+         * return true;
+         * }
+         * }
+         */
+
         return false;
     }
+
 }
