@@ -39,9 +39,7 @@ public class App {
                             if (steps[k] == 0 && steps[l] == 0) {
                                 continue;
                             }
-                            if(check(i, j, target, g, steps[k], steps[l])){
-                                num++;
-                            }
+                            num += check(i, j, target, g, steps[k], steps[l], true);
                         }
                     }
 
@@ -51,40 +49,56 @@ public class App {
         return num;
     }
 
-    public static boolean check(int i, int j, String target, String[][] g, int stepX, int stepY) {
+    public static int check(int i, int j, String target, String[][] g, int stepX, int stepY, boolean turnable) {
+        int wordFound = 0;
         int index = 1;
-        int roomRequiredX = 0;
-        int roomRequiredY = 0;
+        // int roomRequiredX = 0;
+        // int roomRequiredY = 0;
 
-        roomRequiredX = j + stepX * target.length() - stepX;
-        roomRequiredY = i + stepY * target.length() - stepY;
+        // roomRequiredX = j + stepX * target.length() - stepX;
+        // roomRequiredY = i + stepY * target.length() - stepY;
 
         int currentR = i;
         int currentC = j;
 
-        if (roomRequiredX < g[0].length && roomRequiredX >= 0 && roomRequiredY < g.length && roomRequiredY >= 0) {
-            for (int count = 0; count < target.length() - 1; count++) {
-                currentR += stepY;
-                currentC += stepX;
+        // if (roomRequiredX < g[0].length && roomRequiredX >= 0 && roomRequiredY <
+        // g.length && roomRequiredY >= 0) {
+        for (int count = 0; count < target.length() - 1; count++) {
+            currentR += stepY;
+            currentC += stepX;
+            if (currentR < g.length && currentR>-1 && currentC < g[0].length && currentC>-1) {
                 String checkingCell = g[currentR][currentC];
                 String targetLetter = target.substring(index);
                 if (index < target.length()) {
                     targetLetter = target.substring(index, index + 1);
                 }
+
                 boolean matched = targetLetter.equals(checkingCell);
+
+                if (turnable && matched && index != target.length() - 1) {
+                    int[][] nextSteps = { { -stepY, stepX }, { stepY, -stepX } };
+                    for (int c = 0; c < 2; c++) {
+                        String nextTarget = target.substring(index);
+                        int temp = check(currentR, currentC, nextTarget, g, nextSteps[c][0],
+                                nextSteps[c][1], false);
+                        wordFound += temp;
+                    }
+                }
+
                 if (matched) {
                     index++;
                 } else {
-                    return false;
+                    break;
                 }
             }
 
             if (index == target.length()) {
-                return true;
+                wordFound++;
             }
         }
+        // }
 
-        return false;
+        return wordFound;
     }
 
 }
